@@ -21,7 +21,9 @@
  * Department of Computer Science and Engineering, IIT Bombay
  * 
  */
-
+//! we included "void debug_draw_t::DrawTom(const b2Color& color)" and "void debug_draw_t::DrawJerry(const b2Color& color)"
+//! to draw figures of Tom and Jerry which include drawing of ellipse, circle, rectangle, lines, curves, adding colors, etc.
+ 
 #include "render.hpp"
 
 #ifdef __APPLE__
