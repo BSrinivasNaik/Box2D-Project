@@ -39,16 +39,29 @@ using namespace std;
 
 namespace cs251
 {
-  /**  The is the constructor
+  /** \par The is the constructor 
    * This is the documentation block for the constructor.
-   */
-
+   */ 
   dominos_t::dominos_t()
   {
-    //Ground
-    /*! \var b1
-     * \brief pointer to the body ground
-     */
+  /** \par Ground 
+    -# shape -b2EdgeShape 
+      -# A line segment (edge) shape
+      -# These can be connected in chains or loops to other edge shapes
+      -# The connectivity information is used to ensure correct contact normals
+    -# bd -b2BodyDef 
+      -# A body definition holds all the data needed to construct a rigid body
+      -# You can safely re-use body definitions
+      -# Shapes are added to a body after construction
+    -# b2vec2 -variable
+      -# A 2 dimensional column vector 
+    -# Set -b2EdgeShape 
+      -# Set this as an isolated edge
+    -# CreateFixture -b2Body 
+      -# Creates a fixture from a shape and attach it to this body
+      -# This is a convenience function
+      -# If the density is non-zero, this function automatically updates the mass of the body           
+  */
     b2Body* b1;
     {
 
@@ -59,7 +72,29 @@ namespace cs251
       b1->CreateFixture(&shape, 0.0f);
     }
 
-    //Top horizontal shelf Tom's palce
+  /** \par Top Horizontal shelf-a place belonging to Tom
+    -# shape -b2PolygonShape
+      -# A convex polygon
+      -# It is assumed that the interior of the polygon is to the left of each edge
+      -# Polygons have a maximum number of vertices equal to b2_maxPolygonVertices
+      -# In most cases you should not need many vertices for a convex polygon
+    -# SetAsBox -b2PolygonShape 
+      -# Build vertices to represent an oriented box
+    -# bd -b2BodyDef 
+      -# A body definition holds all the data needed to construct a rigid body
+      -# You can safely re-use body definitions
+      -# Shapes are added to a body after construction
+    -# position -b2vec2
+      -# A two dimensional column vector
+    -# Set -b2vec2
+      -# Set this vector to some specified coordinates
+    -# ground -b2Body 
+      -# A rigid body
+    -# CreateFixture -b2Body 
+      -# Creates a fixture from a shape and attach it to this body
+      -# This is a convenience function
+      -# If the density is non-zero, this function automatically updates the mass of the body              
+  */
     {
       b2PolygonShape shape;
       shape.SetAsBox(5.0f, 0.25f);
@@ -69,7 +104,10 @@ namespace cs251
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
-    //Tom's powerful pushing leg
+    /** \par Tom's powerful pushing leg
+      * This is the front leg of tom which is responsible for the disturbance of first domino
+      * which finally leads to trapping of Jerry.
+    */
     {
       b2PolygonShape shape;
       shape.SetAsBox(2.85f, 0.001f);
@@ -79,7 +117,10 @@ namespace cs251
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
-    //Top horizontal shelf
+    /** \par Top horizontal shelf
+      * This is in the top right corner of the of the screen.
+      * This serves as a platform for a long set of dominoes
+    */
     {
       b2PolygonShape shape;
       shape.SetAsBox(6.0f, 0.25f);
@@ -89,7 +130,10 @@ namespace cs251
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
-    //Dominos
+    /** \par Dominos on the top right
+      * This is the first set of dominoes which are situated in the top right corner of the screen.
+      * This then lead to disturbing a sphere which falls into a pulley system.
+    */
     {
       b2PolygonShape shape;
       shape.SetAsBox(0.1f, 1.0f);
@@ -108,7 +152,10 @@ namespace cs251
 	  body->CreateFixture(&fd);
 	}
     }
-    //Added sphere
+    /** \par solid sphere
+     * This sphere is located at the top right corner of the screen.
+     * This sphere when disturbed from its position by a knocking of domino, then falls into the solid open rectangular container.
+    */
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -125,6 +172,9 @@ namespace cs251
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
+   
+
+
 
     //Another horizontal shelf
     /*
@@ -196,8 +246,14 @@ namespace cs251
 	}
     }
     */
+   
 
-    //The pulley system
+
+
+    /** \par The pulley system
+      * This pulley system is located in the top right corner of the screen and when sufficient amount weight is present in its left container
+      * the right container moves up and disturbs a sphere on revolving platform.
+    */
     {
       b2BodyDef *bd = new b2BodyDef;
       bd->type = b2_dynamicBody;
@@ -252,7 +308,10 @@ namespace cs251
       m_world->CreateJoint(myjoint);
     }
 
-    //The revolving horizontal platform
+    /** \par The revolving horizontal platform
+     * This is located in the top-center part of the screen
+     * This platform holds a sphere which when falls of the platform disturbs a pendulum system and falls into the container 
+    */
     {
       b2PolygonShape shape;
       shape.SetAsBox(2.2f, 0.2f);
@@ -282,7 +341,10 @@ namespace cs251
       m_world->CreateJoint(&jointDef);
     }
 
-    //The heavy sphere on the platform
+    /** \par The heavy sphere on the platform
+     * This sphere is located in the top-center part of the screen and is responsible for disturbing the series of pendulum system
+      * This then falls off into the solid open rectangular container to stop it from disturbing other parts of the simulation.
+    */
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -299,6 +361,8 @@ namespace cs251
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
+
+
 
     //Box
     /*
@@ -349,12 +413,62 @@ namespace cs251
       box1->CreateFixture(fd2);
       box1->CreateFixture(fd3);
   	}*/
-  	//train of pendulums
+
+
+
+
+  /** \par Open Rectangular Box to stop the sphere
+   * This is located in the top-center part of the screen.
+   * This Box is shaped in such a manner such that it is just sufficient to hold the sphere from falling off and disturbing the whole system below it.
+  **/
+
+{
+  {
+      b2PolygonShape shape;
+      shape.SetAsBox(1.7f, 0.1f);
+
+      b2BodyDef bd;
+      bd.position.Set(-4.7f, 25.7f);
+      //bd.position.Set(-6.0f, 16.7f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+
+  {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 0.35f);
+
+      b2BodyDef bd;
+      bd.position.Set(-6.2f, 26.0f);
+      //bd.position.Set(-7.5f, 17.0f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+
+  {
+      b2PolygonShape shape;
+      shape.SetAsBox(0.1f, 1.35f);
+
+      b2BodyDef bd;
+      bd.position.Set(-3.2f, 26.95f);
+      //bd.position.Set(-4.5f, 17.95f);
+      b2Body* ground = m_world->CreateBody(&bd);
+      ground->CreateFixture(&shape, 0.0f);
+    }
+}
+
+  	/** \par Series of pendulums
+     * This series of pendulums is present in the top-center corner of the screen
+     * This is implemented by iterating in a "for loop" which creates a series of 6 pendulums
+     * These the disturb a solid sphere which fals onto conveyer belt.
+    */
   	{
       b2Body* b2;
 
 	b2PolygonShape shape;
 	shape.SetAsBox(2.0f, 0.0f);
+
+
 
 	//b2BodyDef bd;
 	//bd.position.Set(-36.5f, 38.0f);
@@ -362,12 +476,19 @@ namespace cs251
 	//b2->CreateFixture(&shape, 0.0f);
 
 
+
       b2Body* b4;
 
     b2CircleShape circle;
     circle.m_radius = 0.5;
+
+
+
 	//b2PolygonShape shape;
 	//shape.SetAsBox(0.25f, 0.25f);
+
+
+
 
     b2FixtureDef ballfd;
     ballfd.shape = &circle;
@@ -391,8 +512,10 @@ namespace cs251
       jd.Initialize(b2, b4, anchor);
       m_world->CreateJoint(&jd);
 	}
-	}
-	//Trial for boat
+ }
+	//This part of code to be replaced with code for conveyer belt
+  
+
 	//Top horizontal shelf
     {
       b2PolygonShape shape;
@@ -422,9 +545,14 @@ namespace cs251
 	  body->CreateFixture(&fd);
 	}
     }
-    //end of trail for boat
+    //end of trail for conveyer belt
+  
 
-	//Horizontal Platform before Boat
+
+	/** \par Horizontal Platform After Conveyer Belt
+   * This is located in the top-right corner of the screen.
+   * This is the last platform after which the sphere falls onto the inclined lines and then is directed onto the wedge system
+  */
 	{
       b2PolygonShape shape;
       shape.SetAsBox(1.3f, 0.25f);
@@ -436,7 +564,10 @@ namespace cs251
       ground->CreateFixture(&shape, 0.0f);
     }
 
-    //The sphere on the platform which hits boat
+    /** \par The sphere on the platform which is hit by sphere from conveyer belt
+     * This sphere is located in the top-right corner of the screen
+     * This sphere falls onto the inclined lines then is directed to disturb the box present of the other side of the wedge system
+    */ 
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -456,44 +587,13 @@ namespace cs251
       sbody->CreateFixture(&ballfd);
     }
 
-    //Box to stop the ball..!!
 
-{
-	{
-      b2PolygonShape shape;
-      shape.SetAsBox(1.7f, 0.1f);
 
-      b2BodyDef bd;
-      bd.position.Set(-4.7f, 25.7f);
-      //bd.position.Set(-6.0f, 16.7f);
-      b2Body* ground = m_world->CreateBody(&bd);
-      ground->CreateFixture(&shape, 0.0f);
-    }
-
-	{
-      b2PolygonShape shape;
-      shape.SetAsBox(0.1f, 0.35f);
-
-      b2BodyDef bd;
-      bd.position.Set(-6.2f, 26.0f);
-      //bd.position.Set(-7.5f, 17.0f);
-      b2Body* ground = m_world->CreateBody(&bd);
-      ground->CreateFixture(&shape, 0.0f);
-    }
-
-	{
-      b2PolygonShape shape;
-      shape.SetAsBox(0.1f, 1.35f);
-
-      b2BodyDef bd;
-      bd.position.Set(-3.2f, 26.95f);
-      //bd.position.Set(-4.5f, 17.95f);
-      b2Body* ground = m_world->CreateBody(&bd);
-      ground->CreateFixture(&shape, 0.0f);
-    }
-    }
-
-//Inclined lines
+/** \par Inclined lines
+ * These form a set of inclined lines which are located on to the right part of the screen
+ * These are there to provide the sphere enough inertia to shoot off the box present of the other side of the wedge system
+ * This then goes below the staris system in the simulation and is stopped there.
+*/
     {
 	{
       b2PolygonShape shape;
@@ -574,9 +674,14 @@ namespace cs251
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }*/
+
+
     }
 
-    //Long horizontal lins
+    /** \par Long horizontal line
+     * This is located in the center part of the screen and serves as the divider from the lower part of the screen. 
+     * This is a long horizontal line which serves as a platform for the stairs, wedge system and multiple revolving platforms.  
+    */
     {
       b2PolygonShape shape;
       shape.SetAsBox(22.0f, 0.001f);
@@ -588,7 +693,11 @@ namespace cs251
       ground->CreateFixture(&shape, 0.0f);
     }
 
-    //The see-saw system at the bottom
+    /** \par The see-saw system at the bottom
+     * This is wedge system which is located in the lower-right part of the screen.
+     * This then pushes off the box which disturbs multiple revolving platforms.
+     * This consists of a long plank which is held by a joint at the center and helps in knocking off the box to enough height to disturb the revolving planks. 
+    */
     {
       //The triangle wedge
       b2Body* sbody;
@@ -645,7 +754,10 @@ namespace cs251
       body3->CreateFixture(fd3);
     }
 
-    //Multiple revolving horizontal platforms which act as stairs
+    /** \par Multiple revolving horizontal platforms which act as stairs
+     * This system is designed and setup in such a way so as to revolve such that movement of just one of them disturbs all of them in series.
+     * This helps in moving the impact from the box to move upwards untill it disturbs the last plank which holds the sphere which moves to later part of simulation 
+    */
     {
       b2PolygonShape shape;
       shape.SetAsBox(1.55f, 0.2f);
@@ -691,7 +803,10 @@ namespace cs251
       }
       
     }
-    //Sphere that disturbs the dominos on the stairs
+    /** \par Sphere that disturbs the dominos on the stairs
+     * This sphere is located in the center part of the screen.
+     * This sphere knocks off the first domino on the decending stair system
+    */
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -710,9 +825,14 @@ namespace cs251
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
-    //Stairs and dominos
-   {
 
+    /** \par Stairs and dominos
+     * This consists of both the dominos and decending stair system which are present in the center part of the screen
+     * This is first disturbed by the sphere on the last plank of the revolving plank system
+     * These dominoes are designed in such a way so that the heights are just enough to transfer the impact given by the sphere.
+     * This system is followed by a series of dominoes of varying heights
+    */ 
+   {
     {
       b2PolygonShape shape, shaped;
       shaped.SetAsBox(0.1f, 1.4f); //shaped for dominos
@@ -770,7 +890,11 @@ namespace cs251
      
     }
    }
-	// large ball moving towards conveyer belt
+
+	/** \par Large ball moving towards inclined line to the left
+   * This sphere is located in the center-left part of the screen.
+   * This sphere is pushed off by the domins system which then travels to the inclined line to later part of the simulation
+  */
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -788,7 +912,7 @@ namespace cs251
       sbody->CreateFixture(&ballfd);
     }
 
-   //inclined line as substitute for conveyer belt
+   //Inclined line to the left
    {
       b2PolygonShape shape;
       shape.SetAsBox(6.0f, 0.08f);
@@ -801,7 +925,12 @@ namespace cs251
       ground->CreateFixture(&shape, 0.0f);
     }
 
-   // dominos on the floor and the sphere
+   /** Dominoes on the floor and a train of two spheres
+    * This forms the lower part of the screen.
+    * This system consists of Two sets of ascending and descending heights of dominoes and a train of two spheres
+    * The dominoes of varying heights are designed by putting various for loops and conditional statements.
+    * Ths train of two spheres help in transforming the impact of 1st set dominoes to 2nd set of dominoes of varying heights.
+   */
 
    //inc-dec heights dominos-1
   {
@@ -880,7 +1009,11 @@ namespace cs251
       }
     }
 
-    //Fate changing ball of Jerry :)
+    /** \par Fate changing sphere of Jerry :)
+     * This sphere is located in lower-right part of the screen.
+     * This is designed to move up in the simulation by changing its "gravityScale" property.
+     * This the pushes one side of the final pulley system which traps the Jerry.
+    */
     {
       b2Body* sbody;
       b2CircleShape circle;
@@ -898,7 +1031,10 @@ namespace cs251
       sbody = m_world->CreateBody(&ballbd);
       sbody->CreateFixture(&ballfd);
     }
-    // Jerry's Den
+    /** \par Jerry's Den
+     * This consists of the pulley system which has the trap for the Jery on the other side.
+     * and open rectangle on one side.
+    */
     //The pulley system
     {
       b2BodyDef *bd = new b2BodyDef;
@@ -994,7 +1130,7 @@ namespace cs251
       myjoint->Initialize(box1, box2, worldAnchorGround1, worldAnchorGround2, box1->GetWorldCenter(), box2->GetWorldCenter(), ratio);
       m_world->CreateJoint(myjoint);
     }
-    //Long Vertical lins
+    //Long Vertical line
     {
       b2PolygonShape shape;
       shape.SetAsBox(0.001f, 13.0f);
@@ -1005,7 +1141,11 @@ namespace cs251
       b2Body* ground = m_world->CreateBody(&bd);
       ground->CreateFixture(&shape, 0.0f);
     }
-    //Jerry's place
+    /** \par Jerry's place
+     * This is located in the rightmost corner of the screen and last part of the simulation.
+     * This is the place which acts as the platform for the Jerry to stay.
+     
+    */
     {
       b2PolygonShape shape;
       shape.SetAsBox(3.0f, 0.25f);
