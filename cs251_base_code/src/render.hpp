@@ -32,6 +32,7 @@ struct b2AABB;
 
 //! This class implements debug drawing callbacks that are invoked
 //! inside b2World::Step.
+//! we included "DrawTom" and "DrawJerry" callbacks in this class for drawing figures of Tom and Jerry.
 class debug_draw_t : public b2Draw
 {
 public:
