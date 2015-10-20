@@ -34,6 +34,33 @@ namespace cs251
   public:
     
     dominos_t();
+
+//     virtual void pre_solve(b2Contact* contact, const b2Manifold* oldManifold)
+// {
+//   b2Fixture* fixtureA = contact->GetFixtureA();
+//         b2Fixture* fixtureB = contact->GetFixtureB();
+
+//         //check each fixture to see if surface velocity should be applied
+//         b2WorldManifold worldManifold;
+//         contact->GetWorldManifold(&worldManifold);
+//         float surfaceVelocityModifier = 0;
+
+//         if ( ConveyorSegment* segment = (ConveyorSegment*)fixtureA->GetUserData() ) {
+//             b2Vec2 localNormal = fixtureA->GetBody()->GetLocalVector( worldManifold.normal);
+//             float32 angle = b2Atan2(localNormal.y, localNormal.x);
+//             if ( segment->minAngle < angle && angle < segment->maxAngle )
+//                 surfaceVelocityModifier += segment->surfaceVelocity;
+//         }
+
+//         if ( ConveyorSegment* segment = (ConveyorSegment*)fixtureB->GetUserData() ) {
+//             b2Vec2 localNormal = fixtureB->GetBody()->GetLocalVector( -worldManifold.normal);
+//             float32 angle = b2Atan2(localNormal.y, localNormal.x);
+//             if ( segment->minAngle < angle && angle < segment->maxAngle )
+//                 surfaceVelocityModifier += segment->surfaceVelocity;
+//         }
+
+//         contact->SetTangentSpeed( surfaceVelocityModifier );
+// }
     
     static base_sim_t* create()
     {
