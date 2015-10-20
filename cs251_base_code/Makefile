@@ -2,7 +2,7 @@
 
 # Programs
 SHELL 	= bash
-CC     	= g++
+CC     	= g++ -pg
 LD	= ld
 RM 	= rm
 ECHO	= /bin/echo
@@ -21,7 +21,7 @@ SRCDIR = $(PROJECT_ROOT)/src
 OBJDIR = $(PROJECT_ROOT)/obj
 BINDIR = $(PROJECT_ROOT)/bin
 DOCDIR = $(PROJECT_ROOT)/doc
-VPATH:=/external/src
+
 # Library Paths
 BOX2D_ROOT=$(EXTERNAL_ROOT)
 GLUI_ROOT=/usr
@@ -31,7 +31,7 @@ GL_ROOT=/usr/include/
 LIBS = -lBox2D -lglui -lglut -lGLU -lGL
 
 # Compiler and Linker flags
-CPPFLAGS =-g -O3 -Wall -fno-strict-aliasing
+CPPFLAGS =-g -O2 -Wall -fno-strict-aliasing
 CPPFLAGS+=-I $(BOX2D_ROOT)/include -I $(GLUI_ROOT)/include
 LDFLAGS+=-L $(BOX2D_ROOT)/lib -L $(GLUI_ROOT)/lib
 
@@ -57,7 +57,7 @@ INCS := $(wildcard $(SRCDIR)/*.hpp)
 OBJS := $(SRCS:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 
-.PHONY: all setup doc clean distclean b2dsetup
+.PHONY: all setup codeDoc clean distclean report
 
 all: setup $(BINDIR)/$(TARGET)
 
@@ -90,8 +90,8 @@ $(OBJS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	fi;
 	@$(RM) -f temp.log temp.err
 
-doc:
-	@$(ECHO) -n "Generating Doxygen Documentation ...  "
+codeDoc:
+	@$(ECHO) -n "Doxygen Documentation of Group-22...  "
 	@$(RM) -rf doc/html
 	@$(DOXYGEN) $(DOCDIR)/Doxyfile 2 > /dev/null
 	@$(ECHO) "Done"
@@ -103,5 +103,36 @@ clean:
 
 distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
+
+report:
+	pdflatex ProjectReport.tex > /dev/null;
+	bibtex ProjectReport
+	pdflatex ProjectReport.tex > /dev/null;
+	pdflatex ProjectReport.tex > /dev/null;
+	
+profile: 
+	@cd $(BINDIR);
+	@$(BINDIR)/cs251_base;
+	@gprof ./bin/cs251_base gmon.out > $(OBJDIR)/analysis.txt;
+	@rm gmon.out;
+	@python $(SRCDIR)/gprof2dot.py $(OBJDIR)/analysis.txt > $(OBJDIR)/callgraph.dot;
+	@rm $(OBJDIR)/analysis.txt;
+	@dot -Tpng $(OBJDIR)/callgraph.dot -o $(BINDIR)/callgraph.png;
+	@rm $(OBJDIR)/callgraph.dot;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
