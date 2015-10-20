@@ -27,6 +27,15 @@
 
 #include <Box2D/Box2D.h>
 
+ // #ifdef __APPLE__
+// #include <GLUT/glut.h>
+// #else
+// #include "GL/freeglut.h"
+// #endif
+
+// #define DEGTORAD 0.0174532925199432957f
+// #define RADTODEG 57.295779513082320876f
+
 struct b2AABB;
 
 
@@ -58,6 +67,61 @@ public:
   
   void DrawAABB(b2AABB* aabb, const b2Color& color);
 };
+
+
+// //structure to store current surface velocity of a fixture
+// struct ConveyorSegment {
+//     float minAngle;
+//     float maxAngle;
+//     float surfaceVelocity;
+// };
+// //did not inherit Test class 
+// class iforce2d_Conveyors 
+// {
+// public:
+//     iforce2d_Conveyors()
+//     {
+//         //
+//     }
+    
+//     void Keyboard(unsigned char key)
+//     {
+//         switch (key) {
+//         case 'q': m_circleConveyor.surfaceVelocity = -5; break;
+//         case 'e': m_circleConveyor.surfaceVelocity =  5; break;
+//         case 'a': m_polygonConveyor.surfaceVelocity = -5; break;
+//         case 'd': m_polygonConveyor.surfaceVelocity =  5; break;
+
+//         case 'w': m_circleBody->ApplyLinearImpulse( b2Vec2( 0, 150 ), m_circleBody->GetWorldCenter() ); break;
+//         default: Test::Keyboard(key);
+//         }
+//     }
+
+//     void KeyboardUp(unsigned char key)
+//     {
+//         switch (key) {
+//         case 'q': case 'e': m_circleConveyor.surfaceVelocity = 0; break;
+//         case 'a': case 'd': m_polygonConveyor.surfaceVelocity = 0; break;
+//         default: Test::Keyboard(key);
+//         }
+//     }
+//     void Step(Settings* settings)
+//     {
+//         m_debugDraw.DrawString(5, m_textLine, "Use q/w/e to control circle, a/d to control polygon");
+//         m_textLine += 15;
+
+//         Test::Step(settings);
+//     }
+
+//     static Test* Create()
+//     {
+//         return new iforce2d_Conveyors;
+//     }
+//     ConveyorSegment m_circleConveyor;
+//     ConveyorSegment m_polygonConveyor;
+//     ConveyorSegment m_chainConveyor1, m_chainConveyor2;
+//     b2Body* m_circleBody;
+// };
 
 
 #endif
