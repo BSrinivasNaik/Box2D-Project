@@ -105,11 +105,11 @@ distclean: clean
 	@$(RM) -rf $(BINDIR) $(DOCDIR)/html
 
 report:
-	pdflatex ProjectReport.tex > /dev/null;
+	pdflatex ProjectReport.tex
 	bibtex ProjectReport
-	pdflatex ProjectReport.tex > /dev/null;
-	pdflatex ProjectReport.tex > /dev/null;
-	
+	pdflatex ProjectReport.tex
+	pdflatex ProjectReport.tex
+
 profile: 
 	@cd $(BINDIR);
 	@$(BINDIR)/cs251_base;
@@ -120,19 +120,14 @@ profile:
 	@dot -Tpng $(OBJDIR)/callgraph.dot -o $(BINDIR)/callgraph.png;
 	@rm $(OBJDIR)/callgraph.dot;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+release: 
+	@cd $(EXTERNAL_ROOT)/src/;
+	@tar -xvzf Box2D.tgz;
+	@cd Box2D/;
+	@mkdir build;
+	@cd build;
+	@cmake -DCMAKE_BUILD_TYPE=Release ../;
+	@make;
+	@make install;
+	@cd $(PROJECT_ROOT);
+	@make;
